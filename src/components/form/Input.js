@@ -1,4 +1,4 @@
-export default function Input({ label, name, type, value, onChange }) {
+export default function Input({ label, name, type, value, onChange, ...allOtherProps }) {
     return (
         <div>
             <label htmlFor={name}>{label?label:name}</label>
@@ -8,6 +8,7 @@ export default function Input({ label, name, type, value, onChange }) {
                 id={name}
                 value={value}
                 onChange={onChange}
+                {...allOtherProps}
             />
         </div>
     );

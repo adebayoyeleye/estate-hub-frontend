@@ -1,5 +1,5 @@
 export default function Select({ name, label, options }) {
-    const optionItems = options.map(optionItem => {
+    const optionItems = options ? (options.map(optionItem => {
         const option_item = optionItem.replace(/\s+/g, '-').toLowerCase();
         return (
             <option
@@ -10,10 +10,10 @@ export default function Select({ name, label, options }) {
             </option>
         );
     }
-    );
+    )) : null;
     return (
         <div>
-            <label for={name}>{label ? label : name}</label>
+            <label htmlFor={name}>{label ? label : name}</label>
             <select name={name} id={name}>
                 {optionItems}
             </select>

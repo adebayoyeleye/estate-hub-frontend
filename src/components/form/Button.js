@@ -1,6 +1,6 @@
-export default function Button({buttonText}){
+export default function Button({buttonText, ...allOtherProps}){
     return (
-    	<button>
+    	<button {...allOtherProps} >
            {buttonText}
         </button>
     )
