@@ -1,10 +1,10 @@
 import { Routes, Route, Outlet } from "react-router-dom";
 import HomePage from './pages/HomePage';
-import RegisterPage from "./pages/RegisterPage";
+import CreateAccountPage from "./pages/CreateAccountPage";
 import LoginPage from "./pages/LoginPage";
-import DashboardPage from "./pages/DashboardPage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import { createAccount, login } from "./services/auth";
 
 
 import './App.css';
@@ -17,10 +17,10 @@ function App() {
           parent route elements. See the note about <Outlet> below. */}
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route path="register" element={<RegisterPage />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="dashboard" element={<DashboardPage />} />
+          <Route index element={<LoginPage login={login} />} />
+          <Route path="create-account" element={<CreateAccountPage createAccount={createAccount} />} />
+          <Route path="login" element={<LoginPage login={login} />} />
+          <Route path="home" element={<HomePage />} />
 
           {/* Using path="*"" means "match anything", so this route
               acts like a catch-all for URLs that we don't have explicit
