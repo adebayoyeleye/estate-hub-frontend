@@ -1,13 +1,14 @@
 import { Routes, Route, Outlet } from "react-router-dom";
-import HomePage from './pages/HomePage';
-import CreateAccountPage from "./pages/CreateAccountPage";
-import LoginPage from "./pages/LoginPage";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import { createAccount, login } from "./services/auth";
+import HomePage from '../features/auth/HomePage';
+import CreateAccountPage from "../features/auth/CreateAccountPage";
+import LoginPage from "../features/auth/LoginPage";
+import Header from "./Header";
+import Footer from "./Footer";
+import { createAccount } from "../services/auth";
 
 
 import './App.css';
+import { loginAsync } from "../features/auth/userSlice";
 
 function App() {
   return (
@@ -17,9 +18,9 @@ function App() {
           parent route elements. See the note about <Outlet> below. */}
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<LoginPage login={login} />} />
+          <Route index element={<LoginPage login={loginAsync} />} />
           <Route path="create-account" element={<CreateAccountPage createAccount={createAccount} />} />
-          <Route path="login" element={<LoginPage login={login} />} />
+          <Route path="login" element={<LoginPage login={loginAsync} />} />
           <Route path="home" element={<HomePage />} />
 
           {/* Using path="*"" means "match anything", so this route

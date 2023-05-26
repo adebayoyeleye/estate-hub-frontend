@@ -33,15 +33,11 @@ describe('Registration feature', () => {
     cy.url().should('include', '/home')
   });
 
-  describe('sign up fails', () => {
-    beforeEach(() => {
-      cy.get('[data-cy="password"]').type(password + 'wrong')
-    })
-    it('fails with incomplete form', () => {
-      cy.get('[data-cy="username"]').type('');
-      cy.get('[data-cy="create-account"]').click();
-      cy.get('[data-cy="error"]').should('be.visible');
-    });
+  it('fails with incomplete form', () => {
+    cy.get('[data-cy="username"]').type(username + 'wrong');
+    // cy.get('[data-cy="password"]').type('' );
+    cy.get('[data-cy="create-account"]').click();
+    cy.get('[data-cy="error"]').should('be.visible');
   });
 
 });

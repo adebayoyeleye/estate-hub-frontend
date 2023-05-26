@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import Button from "../components/form/Button";
-import Input from "../components/form/Input";
+import Button from "../../common/form/Button";
+import Input from "../../common/form/Input";
 
 export default function CreateAccountPage({ createAccount }) {
 

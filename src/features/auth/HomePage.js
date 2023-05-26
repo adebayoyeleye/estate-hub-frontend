@@ -1,6 +1,6 @@
-import Button from "../components/form/Button";
-import Input from "../components/form/Input";
-import Select from "../components/form/Select";
+import Button from "../../common/form/Button";
+import Input from "../../common/form/Input";
+import Select from "../../common/form/Select";
 
 export default function HomePage(){
     return (

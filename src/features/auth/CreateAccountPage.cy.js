@@ -1,7 +1,7 @@
 import React from 'react'
 import CreateAccountPage from './CreateAccountPage'
 import { BrowserRouter } from 'react-router-dom';
-import {createAccount} from '../services/auth';
+import {createAccount} from '../../services/auth';
 
 
 describe('<CreateAccountPage />', () => {
