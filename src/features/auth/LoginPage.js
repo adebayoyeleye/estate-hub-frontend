@@ -1,36 +1,44 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useSelector, useDispatch } from 'react-redux'
-import { selectUser } from './userSlice'
+import { useSelector, useDispatch } from 'react-redux';
+import { login } from './userSlice';
+import { clearMessage } from "../../common/messageSlice";
 import Button from "../../common/form/Button";
 import Input from "../../common/form/Input";
 
-export default function LoginPage({ login }) {
+export default function LoginPage() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector(selectUser);
 
-  async function handleLogin() {
-    await dispatch(login(username, password));
-    setPassword("************************");
-  }
+  const { isLoggedIn, isLoading } = useSelector((state) => state.user);
+  const { message } = useSelector((state) => state.message);
+
   useEffect(() => {
-    if (user.message === 'Login Success') {
+    if (isLoggedIn) {
       navigate("/home");
     }
-  });
+    dispatch(clearMessage());
+  }, [dispatch, isLoggedIn, navigate]);
+
+  function handleLogin() {
+    dispatch(login({ username, password }));
+  };
 
   return (
     <div>
       <h1>Login Page</h1>
-      {user.message && (<p data-cy="error">{user.message}</p>)}
-      <Input data-cy="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-      <Input data-cy="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <Button data-cy="submit" buttonText={"Login"} onClick={handleLogin} /> <span>or </span><Link to="/create-account" data-cy="sign-up">Sign up</Link>
+      {message && (<p data-cy="error">{message}</p>)}
+      {isLoading
+        ? (<p>{"...loading"}</p>)
+        : <div>
+            <Input data-cy="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+            <Input data-cy="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Button data-cy="submit" buttonText={"Login"} onClick={handleLogin} /> <span>or </span><Link to="/create-account" data-cy="sign-up">Sign up</Link>
+          </div>}
     </div>
   );
 }

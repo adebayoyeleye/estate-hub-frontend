@@ -4,11 +4,8 @@ import CreateAccountPage from "../features/auth/CreateAccountPage";
 import LoginPage from "../features/auth/LoginPage";
 import Header from "./Header";
 import Footer from "./Footer";
-import { createAccount } from "../services/auth";
-
 
 import './App.css';
-import { loginAsync } from "../features/auth/userSlice";
 
 function App() {
   return (
@@ -18,9 +15,9 @@ function App() {
           parent route elements. See the note about <Outlet> below. */}
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<LoginPage login={loginAsync} />} />
-          <Route path="create-account" element={<CreateAccountPage createAccount={createAccount} />} />
-          <Route path="login" element={<LoginPage login={loginAsync} />} />
+          <Route index element={<LoginPage />} />
+          <Route path="create-account" element={<CreateAccountPage />} />
+          <Route path="login" element={<LoginPage />} />
           <Route path="home" element={<HomePage />} />
 
           {/* Using path="*"" means "match anything", so this route
