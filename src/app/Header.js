@@ -1,6 +1,17 @@
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../features/auth/userSlice';
+
 
 export default function Header() {
+
+  const dispatch = useDispatch();
+  const { isLoggedIn } = useSelector((state) => state.user);
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
   return (
     <header role="banner">
       {/* Add your header content, such as a navigation menu or a logo */}
@@ -16,9 +27,16 @@ export default function Header() {
           <li>
             <Link to="/" aria-label="Home Page">Home</Link>
           </li>
-          <li>
-            <Link to="/login" aria-label="Login Page">Login</Link>
-          </li>
+
+          {isLoggedIn ? (
+            <li>
+              <button onClick={handleLogout} aria-label="Logout">Logout</button>
+            </li>
+          ) : (
+            <li>
+              <Link to="/login" aria-label="Login Page">Login</Link>
+            </li>
+          )}
           <li>
             <Link to="/nothing-here" aria-label="Nothing Here Page">Nothing Here</Link>
           </li>
