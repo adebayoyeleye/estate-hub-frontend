@@ -29,16 +29,16 @@ export default function LoginPage() {
   };
 
   return (
-    <div>
+    <main>
       <h1>Login Page</h1>
-      {message && (<p data-cy="error">{message}</p>)}
+      {message && (<p id="message" data-cy="error">{message}</p>)}
       {isLoading
         ? (<p>{"...loading"}</p>)
         : <div>
-            <Input data-cy="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-            <Input data-cy="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <Button data-cy="submit" buttonText={"Login"} onClick={handleLogin} /> <span>or </span><Link to="/create-account" data-cy="sign-up">Sign up</Link>
-          </div>}
-    </div>
+          <Input data-cy="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+          <Input data-cy="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <Button data-cy="submit" buttonText={"Login"} onClick={handleLogin} /> <span>or </span><Link to="/create-account" data-cy="sign-up">Sign up</Link>
+        </div>}
+    </main>
   );
 }

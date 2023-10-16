@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 export default function Button({buttonText, ...allOtherProps}){
     return (
     	<button {...allOtherProps} >
@@ -5,3 +7,8 @@ export default function Button({buttonText, ...allOtherProps}){
         </button>
     )
 }
+
+Button.propTypes = {
+  buttonText: PropTypes.string.isRequired,
+  // any other prop type you expect
+};

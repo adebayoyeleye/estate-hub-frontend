@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 export default function Select({ name, label, options }) {
     const optionItems = options ? (options.map(optionItem => {
         const option_item = optionItem.replace(/\s+/g, '-').toLowerCase();
@@ -20,3 +22,11 @@ export default function Select({ name, label, options }) {
         </div>
     );
 }
+
+Select.propTypes = {
+    name: PropTypes.string.isRequired,
+    label: PropTypes.string,
+    options: PropTypes.arrayOf(PropTypes.string).isRequired,
+    defaultValue: PropTypes.string,
+  };
+  

@@ -1,48 +1,77 @@
 import axios from "axios";
 
-// const API_URL = "http://localhost:3000/api/auth/";
-const API_URL = "http://localhost:8080/api/v1/auth/";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8080/api/v1/auth/";
 
-const createAccount = (username, password) => {
-    // return (username === "user123") && (password === "pass123") ? "Account Creation Success" : "Account Creation Failed";
-    return axios.post(API_URL + "register", {
-        username,
-        password,
-    });
+
+const getCsrfToken = () => {
+    const name = 'XSRF-TOKEN=';
+    const cookies = document.cookie.split(';');
+    // console.log("we are here", cookies);
+    for (let i = 0; i < cookies.length; i++) {
+        let cookie = cookies[i].trim();
+        if (cookie.indexOf(name) === 0) {
+            console.log(cookie.substring(name.length, cookie.length));
+            // return cookie.substring(name.length, cookie.length);
+        }
+    }
+    return null;
+}
+
+const authHeaderWithCsrf = () => {
+    const csrfToken = getCsrfToken();
+    // console.log("we are here");
+    const headers = {};
+    if (csrfToken) {
+        headers['X-XSRF-TOKEN'] = csrfToken;
+    }
+    return headers;
+}
+
+const createAccount = (email, password) => {
+    return axios.post(`${API_URL}register`, { email, password }, { headers: authHeaderWithCsrf() })
+        .catch(error => {
+            console.error("Error in account creation:", error);
+            throw error;
+        });
 };
 
 const login = (username, password) => {
-    // return username && password && (username === "user123") && (password === "pass123") ? "Login Success" : "Login Failed";
-    return axios.post(API_URL + "authenticate", {
-        email: username, password
-    }).then((response) => {
-        if (response.data.token) {
-            localStorage.setItem("user", JSON.stringify(response.data.token));
+        console.log("we are here: LOGIN");
+    return axios.post(
+        `${API_URL}authenticate`,
+        { email: username, password },
+        { 
+            headers: authHeaderWithCsrf(),
+            withCredentials: true // include this line
         }
-        return response.data;
+    )
+    .then((response) => response.data)
+    .catch(error => {
+        console.error("Error during login:", error);
+        getCsrfToken();
+        throw error;
     });
 };
 
-const logout = () => {
-    localStorage.removeItem("user");
-    return axios.post(API_URL + "logout")
+  
+  const logout = () => {
+    return axios.post(`${API_URL}logout`, {}, { headers: authHeaderWithCsrf() })
         .then((response) => response.data);
-}
+  };
 
-const getCurrentUser = () => {
-    return JSON.parse(localStorage.getItem("user"));
-};
 
-const authHeader = () => {
-    const user = getCurrentUser();
-    if (user && user.accessToken) {
-        return { Authorization: 'Bearer ' + user.accessToken };
-    } else {
-        return {};
-    }
-}
+//Add an API endpoint in your backend that returns the currently authenticated user's information if a valid JWT (from an HttpOnly cookie) is present in the request headers.
+const getCurrentUser = async () => {
+    console.error("API_URL: ", API_URL);
 
-const authService = { createAccount, login, logout, getCurrentUser, authHeader, };
+    return  axios.get(`${API_URL}getcurrentuser`, { headers: authHeaderWithCsrf() })
+        .then((response) => response.data)
+        .catch(error => {
+            console.error("Could not fetch current user:", error);
+            // throw error;
+            return null;
+        });
+  };
+
+const authService = { createAccount, login, logout, getCurrentUser };
 export default authService;
-
-
