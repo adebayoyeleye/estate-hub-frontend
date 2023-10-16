@@ -11,6 +11,12 @@ describe('Login Page', () => {
   let store;
 
   beforeEach(() => {
+
+    cy.intercept('GET', '**/getcurrentuser', {
+      statusCode: 404,
+      body: { email: 'testuser@email.com' },
+    }).as('getCurrentUserRequest');
+
     store = configureStore({
       reducer: {
         user: userReducer,
@@ -27,6 +33,9 @@ describe('Login Page', () => {
         </Router>
       </Provider>
     );
+
+    // cy.wait('@getCurrentUserRequest');
+
   });
 
   it('should render login form', () => {
@@ -62,20 +71,25 @@ describe('Login Page', () => {
 
   it('should display loading state on form submission', () => {
 
-    cy.intercept('POST', 'http://localhost:8080/api/v1/auth/authenticate', {
+    // cy.intercept('POST', 'http://localhost:8080/api/v1/auth/authenticate', {
+    cy.intercept('POST', '**/authenticate', {
       statusCode: 200,
       body: { token: 'pending' },
       delay: 1000, // Simulate the pending state with a delay
     }).as('loginRequest');
 
+    // cy.intercept('POST', '**/authenticate', (req) => {
+    //   console.log('Intercepted request:', req);
+    // }).as('loginRequest');
+
     cy.get('[data-cy=username]').type('testUser');
     cy.get('[data-cy=password]').type('testPassword');
 
     cy.get('[data-cy=submit]').click();
+    cy.contains('...loading').should('be.visible');
 
     cy.wait('@loginRequest');
 
-    cy.contains('...loading').should('be.visible');
   });
 
   it('should navigate to /home when isLoggedIn is true upon fulfilled request', () => {

@@ -3,9 +3,22 @@ import authService from "../../services/auth";
 
 import { setMessage } from "../../common/messageSlice";
 
-const user = authService.getCurrentUser();
+let user;
+authService.getCurrentUser()
+  .then(userData => {
+    // Do something with the user
+    user = userData;
+  })
+  .catch(error => {
+    // Handle the error
+    console.error("authService.getCurrentUser() in userSlice failed: ", error);
+    user = null;
+  });
+console.log("Here USER: ", user);
 
-const initialState = user ? { isLoggedIn: true, user } : { isLoggedIn: false, user: null };
+const initialState = user
+  ? { isLoggedIn: true, user, isLoading: false }
+  : { isLoggedIn: false, user: null, isLoading: false };
 
 const userSlice = createSlice({
   name: 'user',
@@ -24,6 +37,7 @@ const userSlice = createSlice({
       .addCase(register.rejected, (state, action) => {
         state.isLoggedIn = false;
         state.user = null;
+        state.isLoading = false;
       })
       .addCase(login.pending, (state, action) => {
         state.isLoggedIn = false;
@@ -37,6 +51,7 @@ const userSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.isLoggedIn = false;
         state.user = null;
+        state.isLoading = false;
       })
       .addCase(logout.fulfilled, (state, action) => {
         state.isLoggedIn = false;

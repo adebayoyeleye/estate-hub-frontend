@@ -12,4 +12,14 @@ describe('<Input />', () => {
     cy.mount(<Input label={labelText} />)
     cy.get('label').should('have.text', labelText)
   })
+
+  it('should handle value changes', () => {
+    const handleChange = cy.stub();
+    cy.mount(<Input name="username" onChange={handleChange} />);
+    cy.get('input[name="username"]').type('John');
+    cy.wrap(handleChange).should('have.been.calledWithMatch', {
+      target: { value: 'John' }
+    });
+  });
+  
 })
