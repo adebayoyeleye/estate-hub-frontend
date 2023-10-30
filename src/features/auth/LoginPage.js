@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import { login } from './userSlice';
+import { getCurrentUser, login } from './userSlice';
 import { clearMessage } from "../../common/messageSlice";
 import Button from "../../common/form/Button";
 import Input from "../../common/form/Input";
@@ -16,6 +16,10 @@ export default function LoginPage() {
 
   const { isLoggedIn, isLoading } = useSelector((state) => state.user);
   const { message } = useSelector((state) => state.message);
+
+  // useEffect(() => {
+  //   dispatch(getCurrentUser());
+  // }, [dispatch]);
 
   useEffect(() => {
     if (isLoggedIn) {

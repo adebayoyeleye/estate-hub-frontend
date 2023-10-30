@@ -1,30 +1,21 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import authService from "../../services/auth";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import authService from '../../services/auth';
 
-import { setMessage } from "../../common/messageSlice";
+import { setMessage } from '../../common/messageSlice';
 
-let user;
-authService.getCurrentUser()
-  .then(userData => {
-    // Do something with the user
-    user = userData;
-  })
-  .catch(error => {
-    // Handle the error
-    console.error("authService.getCurrentUser() in userSlice failed: ", error);
-    user = null;
-  });
-console.log("Here USER: ", user);
-
-const initialState = user
-  ? { isLoggedIn: true, user, isLoading: false }
-  : { isLoggedIn: false, user: null, isLoading: false };
+const initialState = { isLoggedIn: false, user: null, isLoading: false };
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
+      .addCase(getCurrentUser.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(getCurrentUser.fulfilled, (state, action) => {
+        return action.payload;
+      })
       .addCase(register.pending, (state, action) => {
         state.isLoggedIn = false;
         state.isLoading = true;
@@ -53,14 +44,32 @@ const userSlice = createSlice({
         state.user = null;
         state.isLoading = false;
       })
+      .addCase(logout.pending, (state, action) => {
+        state.isLoading = true;
+      })
       .addCase(logout.fulfilled, (state, action) => {
         state.isLoggedIn = false;
         state.user = null;
+        state.isLoading = false;
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.isLoading = false;
       })
   }
-})
+});
 
-
+export const getCurrentUser = createAsyncThunk(
+  'user/getCurrentUser',
+  async () => {
+    try {
+      const user = await authService.getCurrentUser();
+      return { isLoggedIn: true, user, isLoading: false };
+    } catch (error) {
+      console.error("authService.getCurrentUser() in userSlice failed: ", error);
+      return { isLoggedIn: false, user: null, isLoading: false };
+    }
+  }
+);
 
 export const register = createAsyncThunk(
   "user/register",
@@ -95,10 +104,20 @@ export const login = createAsyncThunk(
   }
 )
 
+
 export const logout = createAsyncThunk(
   "user/logout",
-  async () => {
-    await authService.logout();
+  async (_, thunkAPI) => {
+    try {
+      const message = await authService.logout();
+      return message;
+    } catch (error) {
+      const message = (error.response && error.response.data && error.response.data.message)
+        || error.message
+        || error.toString();
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue();
+    }
   }
 )
 

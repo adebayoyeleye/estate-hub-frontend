@@ -1,13 +1,23 @@
+import { useEffect } from "react";
+import { useDispatch } from 'react-redux';
 import { Routes, Route, Outlet } from "react-router-dom";
 import HomePage from '../features/auth/HomePage';
 import CreateAccountPage from "../features/auth/CreateAccountPage";
 import LoginPage from "../features/auth/LoginPage";
 import Header from "./Header";
 import Footer from "./Footer";
+import { getCurrentUser } from '../features/auth/userSlice';
 
 import './App.css';
 
 function App() {
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, [dispatch]);
+
   return (
     <div>
       {/* Routes nest inside one another. Nested route paths build upon
