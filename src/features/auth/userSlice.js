@@ -21,8 +21,8 @@ const userSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(register.fulfilled, (state, action) => {
-        state.isLoggedIn = true;
-        state.user = action.payload.user;
+        // state.isLoggedIn = true;  // Should not be needed !!
+        // state.user = action.payload.user;
         state.isLoading = false;
       })
       .addCase(register.rejected, (state, action) => {
@@ -76,7 +76,8 @@ export const register = createAsyncThunk(
   async ({ username, password }, thunkAPI) => {
     try {
       const response = await authService.createAccount(username, password);
-      return response;
+      thunkAPI.dispatch(setMessage(response.message));
+      // return { user: {email: username} };  // Should not be needed !!
     } catch (error) {
       const message = (error.response && error.response.data && error.response.data.message)
         || error.message

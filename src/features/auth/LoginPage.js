@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import { getCurrentUser, login } from './userSlice';
+import { login } from './userSlice';
 import { clearMessage } from "../../common/messageSlice";
 import Button from "../../common/form/Button";
 import Input from "../../common/form/Input";

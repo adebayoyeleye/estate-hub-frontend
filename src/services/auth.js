@@ -25,7 +25,14 @@ const authHeaderWithCsrf = () => {
 }
 
 const createAccount = (email, password) => {
-    return axios.post(`${API_URL}register`, { email, password }, { headers: authHeaderWithCsrf() })
+    return axios.post(
+        `${API_URL}register`,
+        { email, password },
+        {
+            headers: authHeaderWithCsrf(),
+            withCredentials: true
+        })
+        .then((response) => response.data)
         .catch(error => {
             console.error("Error in account creation:", error);
             throw error;
@@ -38,7 +45,7 @@ const login = (username, password) => {
         { email: username, password },
         {
             headers: authHeaderWithCsrf(),
-            withCredentials: true // include this line
+            withCredentials: true // must be included
         }
     )
         .then((response) => response.data)
